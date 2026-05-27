@@ -1,0 +1,123 @@
+{
+    "name": "fluxer-presence",
+    "displayName": "Fluxer Presence",
+    "description": "Fluxer VSCode Presence using your Custom Status",
+	"author": {
+		"name": "bizojs",
+		"email": "hello@bizo.dev"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/bizojs/fluxer-vscode.git"
+	},
+	"bugs": {
+		"url": "https://github.com/bizojs/fluxer-vscode/issues"
+	},
+    "homepage": "https://github.com/bizojs/fluxer-vscode#readme",
+    "version": "0.1.0",
+    "engines": {
+        "vscode": "^1.120.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "main": "./dist/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "fluxer-presence.setToken",
+                "title": "Fluxer Presence: Set Token"
+            },
+            {
+                "command": "fluxer-presence.clearToken",
+                "title": "Fluxer Presence: Clear Token & Disconnect"
+            },
+            {
+                "command": "fluxer-presence.enable",
+                "title": "Fluxer Presence: Enable"
+            },
+            {
+                "command": "fluxer-presence.disable",
+                "title": "Fluxer Presence: Disable"
+            },
+            {
+                "command": "fluxer-presence.clearStatus",
+                "title": "Fluxer Presence: Clear Status Now"
+            }
+        ],
+        "configuration": {
+            "title": "Fluxer Presence",
+            "properties": {
+                "fluxerPresence.enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable or disable Fluxer Presence."
+                },
+                "fluxerPresence.apiBaseUrl": {
+                    "type": "string",
+                    "default": "https://api.fluxer.app/v1",
+                    "description": "Fluxer API base URL."
+                },
+                "fluxerPresence.statusTemplate": {
+                    "type": "string",
+                    "default": "Editing {filename} in {project}",
+                    "description": "Template for the status text. Supports {filename}, {project}, {language}, {workspace} and {workspacePath}."
+                },
+                "fluxerPresence.idleText": {
+                    "type": "string",
+                    "default": "Idling in VS Code",
+                    "description": "Status text shown when no file is open."
+                },
+                "fluxerPresence.emojiId": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Emoji ID to show in your status. Leave blank for no emoji. For standard Unicode emoji, use the name (e.g. 'computer'). For custom server emoji, use the numeric ID."
+                },
+                "fluxerPresence.emojiName": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Emoji name (required alongside emojiId for custom emoji, or just set this to a unicode emoji like 💻)."
+                },
+                "fluxerPresence.clearOnClose": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Clear your Fluxer status when VS Code closes."
+                },
+                "fluxerPresence.updateIntervalMs": {
+                    "type": "number",
+                    "default": 5000,
+                    "description": "Minimum milliseconds between status updates (debounce)."
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "pnpm run package",
+        "compile": "pnpm run check-types && pnpm run lint && node esbuild.js",
+        "watch": "npm-run-all -p watch:*",
+        "watch:esbuild": "node esbuild.js --watch",
+        "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+        "package": "pnpm run check-types && pnpm run lint && node esbuild.js --production",
+        "compile-tests": "tsc -p . --outDir out",
+        "watch-tests": "tsc -p . -w --outDir out",
+        "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
+        "check-types": "tsc --noEmit",
+        "lint": "eslint src",
+        "test": "vscode-test"
+    },
+    "devDependencies": {
+        "@types/mocha": "^10.0.10",
+        "@types/node": "22.x",
+        "@types/vscode": "^1.120.0",
+        "@vscode/test-cli": "^0.0.12",
+        "@vscode/test-electron": "^2.5.2",
+        "esbuild": "^0.27.3",
+        "eslint": "^9.39.3",
+        "npm-run-all": "^4.1.5",
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.56.1"
+    }
+}

@@ -26,6 +26,7 @@
         "types": ["node", "mocha"],
 
 		// Emit
+        "noEmit": true,
 		"declaration": true,
 		"declarationMap": true,
 		"importHelpers": false,

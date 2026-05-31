@@ -60,7 +60,7 @@ export async function deactivate() {
 async function tryInitClient(context: vscode.ExtensionContext) {
     const token = await context.secrets.get("fluxerPresence.token");
     const config = vscode.workspace.getConfiguration("fluxerPresence");
-    const baseUrl = config.get<string>("apiBaseUrl") ?? "https://api.fluxer.app/v1";
+    const baseUrl = config.get<string>("apiBaseUrl") ?? "https://api.canary.fluxer.app/v1";
     const debounce = config.get<number>("updateIntervalMs") ?? 5000;
 
     if (token) {

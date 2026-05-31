@@ -1,6 +1,8 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import { CustomStatus } from "./FluxerClient";
+import { IDLE_EMOTE } from "./emotes";
+import { getEmoteParts, getFileEmote } from "./utils";
 
 const LANGUAGE_NAMES: Record<string, string> = {
     typescriptreact: "TSX",
@@ -42,7 +44,7 @@ const LANGUAGE_NAMES: Record<string, string> = {
 };
 
 function getLanguageName(languageId: string): string {
-    return LANGUAGE_NAMES[languageId] ?? languageId
+    return LANGUAGE_NAMES[languageId] ?? languageId;
 }
 
 function applyTemplate(template: string, vars: Record<string, string>): string {
@@ -59,10 +61,11 @@ export function buildStatus(): CustomStatus | null {
 
     if (!editor) {
         const idleText = config.get<string>("idleText") ?? "Idling in VS Code"
+        const idleEmote = getEmoteParts(IDLE_EMOTE);
         return {
             text: idleText,
-            emoji_name: emojiName,
-            emoji_id: emojiId
+            emoji_name: idleEmote.name,
+            emoji_id: idleEmote.id
         };
     }
 
@@ -77,6 +80,8 @@ export function buildStatus(): CustomStatus | null {
 
     const template = config.get<string>("statusTemplate") ?? "Editing {filename} in {project}";
 
+    const emote = getEmoteParts(getFileEmote(document))
+
     const text = applyTemplate(template, {
         filename,
         project,
@@ -89,7 +94,7 @@ export function buildStatus(): CustomStatus | null {
 
     return {
         text: truncated,
-        emoji_name: emojiName,
-        emoji_id: emojiId
+        emoji_name: emote.name || emojiName,
+        emoji_id: emote.id || emojiId
     };
 }

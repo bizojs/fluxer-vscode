@@ -17,7 +17,7 @@
     "icon": "assets/icon.png",
     "license": "AGPL-3.0",
     "homepage": "https://github.com/bizojs/fluxer-vscode#readme",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "engines": {
         "vscode": "^1.120.0"
     },
@@ -68,7 +68,7 @@
                 },
                 "fluxerPresence.apiBaseUrl": {
                     "type": "string",
-                    "default": "https://api.fluxer.app/v1",
+                    "default": "https://api.canary.fluxer.app/v1",
                     "description": "Fluxer API base URL."
                 },
                 "fluxerPresence.statusTemplate": {
@@ -110,7 +110,9 @@
         "typecheck": "tsc --noEmit",
         "lint": "eslint src",
         "package": "npm run typecheck && npm run lint && npm run build && npx vsce package",
-        "clean": "rm -rf dist *.vsix"
+        "clean": "rm -rf dist *.vsix",
+        "watch:tsc": "tsc --watch",
+        "watch:esbuild": "node esbuild.js --watch"
     },
     "devDependencies": {
         "@types/mocha": "^10.0.10",

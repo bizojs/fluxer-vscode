@@ -2,6 +2,7 @@
     "name": "fluxer-presence",
     "displayName": "Fluxer Presence",
     "description": "Fluxer VSCode Presence using your Custom Status",
+    "version": "1.2.0",
 	"author": {
 		"name": "bizojs",
 		"email": "hello@bizo.dev"
@@ -16,8 +17,7 @@
     "publisher": "bizojs",
     "icon": "assets/icon.png",
     "license": "AGPL-3.0",
-    "homepage": "https://github.com/bizojs/fluxer-vscode#readme",
-    "version": "1.1.0",
+    "homepage": "https://imflux.ing/vscode",
     "engines": {
         "vscode": "^1.120.0"
     },

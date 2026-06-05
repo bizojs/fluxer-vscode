@@ -1,3 +1,6 @@
+import { version, name, author } from "../package.json";
+
+
 export interface CustomStatus {
     text: string;
     emoji_name?: string | undefined;
@@ -14,6 +17,8 @@ export class FluxerClient {
     private token: string;
     private baseUrl: string;
     private lastSent: LastSent | null = null;
+    private originalStatus: CustomStatus | null = null;
+    private hasInitialised: boolean = false;
     private pending: NodeJS.Timeout | null = null;
     private debounceMs: number;
 
@@ -21,6 +26,23 @@ export class FluxerClient {
         this.token = token;
         this.baseUrl = baseUrl;
         this.debounceMs = debounceMs;
+    }
+
+    async fetchCurrentStatus(): Promise<CustomStatus | null> {
+        const response = await fetch(`${this.baseUrl}/users/@me/settings`, {
+            headers: {
+                Authorization: `Bearer ${this.token}`,
+            }
+        });
+
+        if (!response.ok) {
+            const text = await response.text().catch(() => "(no body)");
+            throw new FluxerApiError(response.status, text);
+        }
+
+        const data = await response.json() as { custom_status?: CustomStatus | null };
+
+        return data.custom_status ?? null;
     }
 
     updateToken(token: string) {
@@ -49,6 +71,11 @@ export class FluxerClient {
     }
 
     async sendUpdate(status: CustomStatus): Promise<boolean> {
+        if (!this.hasInitialised) {
+            this.originalStatus = await this.fetchCurrentStatus();
+            this.hasInitialised = true;
+        }
+
         if (this.isSameAsLast(status)) {
             return false;
         }
@@ -68,6 +95,13 @@ export class FluxerClient {
         };
 
         return true;
+    }
+
+    async restoreStatus(): Promise<void> {
+        await this.patch({ custom_status: this.originalStatus ?? null });
+        this.lastSent = null;
+        this.hasInitialised = false;
+        this.originalStatus = null;
     }
 
     async clearStatus(): Promise<void> {

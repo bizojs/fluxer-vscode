@@ -1,5 +1,6 @@
 import { version, name, author } from "../package.json";
 
+const extensionId = `"${author.name}.${name}"`;
 
 export interface CustomStatus {
     text: string;
@@ -32,6 +33,7 @@ export class FluxerClient {
         const response = await fetch(`${this.baseUrl}/users/@me/settings`, {
             headers: {
                 Authorization: `Bearer ${this.token}`,
+                "User-Agent": `${extensionId}/${version}`
             }
         });
 
@@ -133,7 +135,7 @@ export class FluxerClient {
             headers: {
                 Authorization: `Bearer ${this.token}`,
                 "Content-Type": "application/json",
-                "User-Agent": "FluxerPresenceVSCode/0.1.0"
+                "User-Agent": `${extensionId}/${version}`
             },
             body: JSON.stringify(body)
         });

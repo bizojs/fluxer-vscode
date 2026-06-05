@@ -14,6 +14,19 @@ export async function activate(context: vscode.ExtensionContext) {
     statusBarItem.command = "fluxer-presence.setToken";
     context.subscriptions.push(statusBarItem);
 
+    const token = await context.secrets.get("fluxerPresence.token");
+
+    if (!token) {
+        await vscode.window.showInformationMessage(
+            "Fluxer: Please enter your token to get started.",
+            "Set token"
+        ).then(selection => {
+            if (selection === "Set token") {
+                cmdSetToken(context);
+            }
+        });
+    }
+
     await tryInitClient(context);
 
     context.subscriptions.push(
@@ -52,7 +65,7 @@ export async function deactivate() {
     if (client && config.get<boolean>("clearOnClose")) {
         client.cancelPending();
         try {
-            await client.clearStatus();
+            await client.restoreStatus();
         } catch {}
     }
 }
